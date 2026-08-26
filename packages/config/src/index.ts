@@ -84,7 +84,7 @@ export function loadConfig(): TurnalConfig {
     api: {
       port: apiPort,
       host: process.env.API_HOST || '0.0.0.0',
-      url: process.env.API_URL || `http://localhost:${apiPort}`,
+      url: process.env.API_URL || `http://127.0.0.1:${apiPort}`,
       jwtSecret: process.env.JWT_SECRET || 'turnal-dev-secret-key-32-chars-min-length-required',
       jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
       jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'turnal-dev-refresh-secret-key-32-chars',
