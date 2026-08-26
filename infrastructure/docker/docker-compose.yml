@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Primary Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: turnal-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: turnal
+      POSTGRES_PASSWORD: turnalpassword
+      POSTGRES_DB: turnal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Redis Cache & PubSub
+  redis:
+    image: redis:7-alpine
+    container_name: turnal-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Backend Management API Server
+  api:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.api
+    container_name: turnal-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://turnal:turnalpassword@postgres:5432/turnal?schema=public
+      REDIS_URL: redis://redis:6379
+      API_PORT: 4000
+      API_HOST: 0.0.0.0
+      JWT_SECRET: turnal-prod-jwt-secret-min-32-characters-long
+      BASE_DOMAIN: turnal.live
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - redis
+
+  # Edge / Ingress Proxy Server
+  edge:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.edge
+    container_name: turnal-edge
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      API_URL: http://api:4000
+      EDGE_PORT: 8080
+      EDGE_HOST: 0.0.0.0
+      BASE_DOMAIN: turnal.live
+      JWT_SECRET: turnal-prod-jwt-secret-min-32-characters-long
+    ports:
+      - "8080:8080"
+    depends_on:
+      - api
+
+  # SaaS Next.js Dashboard
+  dashboard:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/Dockerfile.dashboard
+    container_name: turnal-dashboard
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_PUBLIC_EDGE_URL: http://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -1,0 +1,22 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY package*.json ./
+COPY packages/ ./packages/
+COPY apps/edge/ ./apps/edge/
+
+RUN npm install
+RUN npm --workspace=@turnal/protocol run build
+RUN npm --workspace=@turnal/shared run build
+RUN npm --workspace=@turnal/auth run build
+RUN npm --workspace=@turnal/config run build
+RUN npm --workspace=@turnal/edge run build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=builder /app ./
+
+EXPOSE 8080
+CMD ["npm", "--workspace=@turnal/edge", "run", "start"]

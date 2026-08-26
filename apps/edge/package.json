@@ -1,0 +1,25 @@
+{
+  "name": "@turnal/edge",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "types": "dist/server.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/server.ts",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@turnal/auth": "^1.0.0",
+    "@turnal/config": "^1.0.0",
+    "@turnal/protocol": "^1.0.0",
+    "@turnal/shared": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@types/ws": "^8.5.14",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  }
+}

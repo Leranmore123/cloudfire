@@ -1,0 +1,36 @@
+{
+  "name": "turnal-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Independent Local-to-Public Tunneling Platform",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "apps/tunnel-agent/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:api": "npm --workspace=@turnal/api run dev",
+    "dev:edge": "npm --workspace=@turnal/edge run dev",
+    "dev:dashboard": "npm --workspace=@turnal/dashboard run dev",
+    "dev:agent": "npm --workspace=@turnal/tunnel-agent run dev",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "node tests/e2e-tunnel.test.mjs",
+    "prisma:generate": "npm --workspace=@turnal/api run prisma:generate",
+    "prisma:migrate": "npm --workspace=@turnal/api run prisma:migrate"
+  },
+  "keywords": [
+    "tunnel",
+    "reverse-proxy",
+    "cloudflare-tunnel-alternative",
+    "ngrok-alternative",
+    "developer-tools"
+  ],
+  "author": "Turnal Engineering",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.7.3"
+  }
+}

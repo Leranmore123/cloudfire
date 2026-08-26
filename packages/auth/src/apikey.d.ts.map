@@ -1,0 +1,1 @@
+{"version":3,"file":"apikey.d.ts","sourceRoot":"","sources":["apikey.ts"],"names":[],"mappings":"AAGA,qBAAa,aAAa;IACxB;;;OAGG;WACW,cAAc,IAAI;QAAE,MAAM,EAAE,MAAM,CAAC;QAAC,SAAS,EAAE,MAAM,CAAC;QAAC,IAAI,EAAE,MAAM,CAAA;KAAE;IAanF;;OAEG;WACW,UAAU,CAAC,MAAM,EAAE,MAAM,GAAG,MAAM;IAIhD;;OAEG;WACW,mBAAmB,IAAI,MAAM;CAG5C"}

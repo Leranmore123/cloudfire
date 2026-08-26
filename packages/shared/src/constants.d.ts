@@ -1,0 +1,13 @@
+export declare const PLATFORM_NAME = "Turnal";
+export declare const DEFAULT_BASE_DOMAIN = "turnal.live";
+export declare const DEFAULT_API_PORT = 4000;
+export declare const DEFAULT_EDGE_PORT = 8080;
+export declare const DEFAULT_DASHBOARD_PORT = 3000;
+export declare const API_KEY_PREFIX = "trk_live_";
+export declare const DEVICE_TOKEN_PREFIX = "dev_tok_";
+export declare const DNS_TXT_PREFIX = "_turnal-challenge.";
+export declare const DNS_CNAME_TARGET = "edge.turnal.live";
+export declare const TUNNEL_TIMEOUT_MS = 30000;
+export declare const HEARTBEAT_INTERVAL_MS = 15000;
+export declare const HEARTBEAT_TIMEOUT_MS = 45000;
+//# sourceMappingURL=constants.d.ts.map

@@ -1,0 +1,215 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TunnelStatus {
+  ONLINE
+  OFFLINE
+  DEGRADED
+  DISABLED
+}
+
+enum DomainVerificationStatus {
+  PENDING
+  VERIFIED
+  FAILED
+}
+
+enum SslStatus {
+  NONE
+  PENDING
+  ACTIVE
+  FAILED
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  name          String?
+  role          Role           @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  tunnels       Tunnel[]
+  domains       Domain[]
+  projects      Project[]
+  devices       Device[]
+  apiKeys       ApiKey[]
+  auditLogs     AuditLog[]
+  subscriptions Subscription[]
+
+  @@map("users")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String
+  description String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tunnels     Tunnel[]
+
+  @@unique([userId, slug])
+  @@map("projects")
+}
+
+model Tunnel {
+  id                String       @id @default(uuid())
+  name              String
+  subdomain         String       @unique
+  customDomain      String?      @unique
+  status            TunnelStatus @default(OFFLINE)
+  localTargetPort   Int          @default(3000)
+  localTargetHost   String       @default("localhost")
+  protocol          String       @default("http")
+  lastHeartbeatAt   DateTime?
+  totalRequests     Int          @default(0)
+  totalBytes        BigInt       @default(0)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  userId            String
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  projectId         String?
+  project           Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  connectedDeviceId String?
+  connectedDevice   Device?      @relation(fields: [connectedDeviceId], references: [id], onDelete: SetNull)
+
+  domains           Domain[]
+  requestLogs       RequestLog[]
+
+  @@map("tunnels")
+}
+
+model Domain {
+  id                 String                   @id @default(uuid())
+  domainName         String                   @unique
+  verificationStatus DomainVerificationStatus @default(PENDING)
+  verificationToken  String                   @unique
+  sslStatus          SslStatus                @default(NONE)
+  verifiedAt         DateTime?
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+
+  userId             String
+  user               User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  targetTunnelId     String?
+  targetTunnel       Tunnel?                  @relation(fields: [targetTunnelId], references: [id], onDelete: SetNull)
+
+  @@map("domains")
+}
+
+model Device {
+  id               String    @id @default(uuid())
+  name             String
+  deviceIdentifier String    @unique
+  platform         String?
+  osVersion        String?
+  agentVersion     String?
+  ipAddress        String?
+  isOnline         Boolean   @default(false)
+  lastSeenAt       DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tunnels          Tunnel[]
+
+  @@map("devices")
+}
+
+model ApiKey {
+  id         String    @id @default(uuid())
+  name       String
+  keyHash    String    @unique
+  keyPrefix  String
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("api_keys")
+}
+
+model RequestLog {
+  id         String   @id @default(uuid())
+  tunnelId   String
+  tunnel     Tunnel   @relation(fields: [tunnelId], references: [id], onDelete: Cascade)
+  requestId  String
+  method     String
+  path       String
+  statusCode Int
+  durationMs Int
+  bytesIn    Int      @default(0)
+  bytesOut   Int      @default(0)
+  clientIp   String?
+  userAgent  String?
+  timestamp  DateTime @default(now())
+
+  @@index([tunnelId, timestamp])
+  @@map("request_logs")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String
+  resource  String
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("audit_logs")
+}
+
+model Plan {
+  id                  String         @id @default(uuid())
+  name                String
+  slug                String         @unique
+  maxTunnels          Int            @default(3)
+  maxCustomDomains    Int            @default(1)
+  bandwidthLimitBytes BigInt         @default(10737418240)
+  priceMonthly        Int            @default(0)
+  createdAt           DateTime       @default(now())
+
+  subscriptions       Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      Plan     @relation(fields: [planId], references: [id], onDelete: Restrict)
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscriptions")
+}
