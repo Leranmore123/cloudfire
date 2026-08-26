@@ -24,11 +24,19 @@ export class LocalForwarder {
     const clientModule = this.protocol === 'https' ? https : http;
 
     // Filter host headers to target local port
-    const headers = { ...msg.headers };
-    headers.host = `${this.localHost}:${this.localPort}`;
+    const headers: Record<string, any> = {};
+    if (msg.headers) {
+      for (const [k, v] of Object.entries(msg.headers)) {
+        if (k.toLowerCase() === 'host') continue;
+        headers[k] = v;
+      }
+    }
+    headers['host'] = `${this.localHost}:${this.localPort}`;
+
+    const hostTarget = this.localHost === 'localhost' ? '127.0.0.1' : this.localHost;
 
     const options: http.RequestOptions = {
-      hostname: this.localHost,
+      hostname: hostTarget,
       port: this.localPort,
       path: msg.path || '/',
       method: msg.method || 'GET',
@@ -76,7 +84,7 @@ export class LocalForwarder {
 
     localReq.on('error', (err) => {
       this.activeLocalRequests.delete(msg.requestId);
-      console.error(`[LocalForwarder] Error connecting to ${this.localHost}:${this.localPort}:`, err.message);
+      console.error(`[LocalForwarder] Error connecting to ${this.localHost}:${this.localPort}: ${err.message}`);
 
       sendFrame({
         type: MessageType.ERROR,
