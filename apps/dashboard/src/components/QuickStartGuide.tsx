@@ -190,7 +190,7 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
             </div>
 
             <a
-              href="/api/download/agent"
+              href="/cli.mjs"
               download="cli.mjs"
               className="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-colors shadow-lg shadow-emerald-500/20"
               title="Download standalone cli.mjs file for your PC/friend"
