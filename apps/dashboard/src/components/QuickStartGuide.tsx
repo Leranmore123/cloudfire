@@ -24,8 +24,8 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
   const liveUrl = `http://${fullDomain}`;
 
   const generatedCommand = useNpx
-    ? `npx @turnal/tunnel-agent tunnel --port ${port || '3001'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`
-    : `node apps/tunnel-agent/ts/dist/cli.mjs tunnel --port ${port || '3001'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`;
+    ? `turnal tunnel --port ${port || '5173'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`
+    : `node apps/tunnel-agent/ts/dist/cli.mjs tunnel --port ${port || '5173'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`;
 
   const handleCopyCmd = async () => {
     const success = await copyToClipboard(generatedCommand);
@@ -179,7 +179,7 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
                 onClick={() => setUseNpx(true)}
                 className={`px-2.5 py-1 rounded-md font-semibold transition-colors ${useNpx ? 'bg-sky-500 text-slate-950' : 'text-slate-400 hover:text-white'}`}
               >
-                npx (Global)
+                turnal CLI
               </button>
               <button
                 onClick={() => setUseNpx(false)}
