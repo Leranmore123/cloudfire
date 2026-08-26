@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchApi } from '../../lib/api-client';
+import { copyToClipboard } from '../../lib/clipboard';
 import { Globe, Plus, Trash2, CheckCircle2, AlertCircle, RefreshCw, Copy, Check } from 'lucide-react';
 
 export default function DomainsPage() {
@@ -30,10 +31,12 @@ export default function DomainsPage() {
     loadData();
   }, []);
 
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = async (text: string, id: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
   };
 
   const handleVerify = async (id: string) => {

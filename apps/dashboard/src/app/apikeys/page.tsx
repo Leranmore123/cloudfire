@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchApi } from '../../lib/api-client';
+import { copyToClipboard } from '../../lib/clipboard';
 import { KeyRound, Plus, Trash2, Copy, Check, ShieldAlert } from 'lucide-react';
 
 export default function ApiKeysPage() {
@@ -49,10 +50,12 @@ export default function ApiKeysPage() {
     }
   };
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async (text: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (

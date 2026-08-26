@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { fetchApi } from '../lib/api-client';
+import { copyToClipboard } from '../lib/clipboard';
 import { StatCard } from '../components/StatCard';
 import { QuickStartGuide } from '../components/QuickStartGuide';
 import { Radio, Laptop, Activity, Database, Copy, Check, ExternalLink, ArrowRight, Terminal } from 'lucide-react';
@@ -32,10 +33,12 @@ export default function DashboardOverview() {
     loadData();
   }, []);
 
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = async (text: string, id: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
   };
 
   const formatBytes = (bytes: number) => {

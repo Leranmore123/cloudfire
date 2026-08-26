@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchApi } from '../../lib/api-client';
+import { copyToClipboard } from '../../lib/clipboard';
 import { Radio, Plus, Trash2, Copy, Check, ExternalLink, Activity, Server, Clock } from 'lucide-react';
 
 export default function TunnelsPage() {
@@ -26,10 +27,12 @@ export default function TunnelsPage() {
     loadTunnels();
   }, []);
 
-  const handleCopy = (text: string, id: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = async (text: string, id: string) => {
+    const success = await copyToClipboard(text);
+    if (success) {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    }
   };
 
   const handleDelete = async (id: string) => {

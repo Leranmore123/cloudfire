@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { copyToClipboard } from '../lib/clipboard';
 import { Terminal, Copy, Check, ExternalLink, Globe, Laptop, Server, Zap, Info, ShieldCheck } from 'lucide-react';
 
 interface QuickStartGuideProps {
@@ -26,16 +27,20 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
     ? `npx @turnal/tunnel-agent tunnel --port ${port || '3001'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`
     : `node apps/tunnel-agent/ts/dist/cli.mjs tunnel --port ${port || '3001'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`;
 
-  const handleCopyCmd = () => {
-    navigator.clipboard.writeText(generatedCommand);
-    setCopiedCmd(true);
-    setTimeout(() => setCopiedCmd(false), 2000);
+  const handleCopyCmd = async () => {
+    const success = await copyToClipboard(generatedCommand);
+    if (success) {
+      setCopiedCmd(true);
+      setTimeout(() => setCopiedCmd(false), 2000);
+    }
   };
 
-  const handleCopyUrl = () => {
-    navigator.clipboard.writeText(liveUrl);
-    setCopiedUrl(true);
-    setTimeout(() => setCopiedUrl(false), 2000);
+  const handleCopyUrl = async () => {
+    const success = await copyToClipboard(liveUrl);
+    if (success) {
+      setCopiedUrl(true);
+      setTimeout(() => setCopiedUrl(false), 2000);
+    }
   };
 
   return (
