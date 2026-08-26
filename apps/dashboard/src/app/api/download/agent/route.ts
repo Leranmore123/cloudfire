@@ -4,11 +4,11 @@ import path from 'node:path';
 
 export async function GET() {
   try {
-    // Attempt paths relative to dashboard app or root workspace
     const possiblePaths = [
+      path.join(process.cwd(), 'public', 'cli.mjs'),
+      path.join(process.cwd(), 'apps', 'dashboard', 'public', 'cli.mjs'),
       path.join(process.cwd(), '..', 'tunnel-agent', 'ts', 'dist', 'cli.mjs'),
       path.join(process.cwd(), 'apps', 'tunnel-agent', 'ts', 'dist', 'cli.mjs'),
-      path.join(process.cwd(), 'dist', 'cli.mjs'),
     ];
 
     let filePath = '';

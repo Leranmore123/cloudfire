@@ -1,6 +1,7 @@
 # Node / NPM
 node_modules/
 dist/
+!apps/dashboard/public/cli.mjs
 build/
 .next/
 out/
