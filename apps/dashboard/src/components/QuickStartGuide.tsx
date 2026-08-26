@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { copyToClipboard } from '../lib/clipboard';
-import { Terminal, Copy, Check, ExternalLink, Globe, Laptop, Server, Zap, Info, ShieldCheck } from 'lucide-react';
+import { Terminal, Copy, Check, ExternalLink, Globe, Laptop, Server, Zap, Info, ShieldCheck, Download } from 'lucide-react';
 
 interface QuickStartGuideProps {
   apiKey?: string;
@@ -188,6 +188,15 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
                 node cli.mjs
               </button>
             </div>
+
+            <a
+              href="/api/download/agent"
+              download="cli.mjs"
+              className="flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-colors shadow-lg shadow-emerald-500/20"
+              title="Download standalone cli.mjs file for your PC/friend"
+            >
+              <Download className="w-3.5 h-3.5" /> Download cli.mjs
+            </a>
 
             <button
               onClick={handleCopyCmd}
