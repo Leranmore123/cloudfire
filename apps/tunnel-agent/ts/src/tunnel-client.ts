@@ -62,7 +62,12 @@ export class TunnelClient extends EventEmitter {
     this.emit('connecting', { attempt: this.reconnectAttempts + 1, url: this.options.edgeWsUrl });
 
     try {
-      this.ws = new WebSocket(this.options.edgeWsUrl);
+      const hostHeader = this.options.customDomain || (this.options.subdomain ? `${this.options.subdomain}.skyranksolution.com` : 'app.skyranksolution.com');
+      this.ws = new WebSocket(this.options.edgeWsUrl, {
+        headers: {
+          'host': hostHeader
+        }
+      });
     } catch (err: any) {
       this.handleDisconnect(`Failed to create WebSocket: ${err.message}`);
       return;

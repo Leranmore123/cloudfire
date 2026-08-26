@@ -25,13 +25,48 @@ function loadDatabase(): DatabaseState {
     }
   }
 
+  const defaultUserId = 'usr_1787745931043_96274';
   const initial: DatabaseState = {
-    users: [],
-    projects: [],
+    users: [
+      {
+        id: defaultUserId,
+        email: 'developer@turnal.live',
+        name: 'Turnal Developer',
+        passwordHash: '$2b$10$m6k1P8q8/j97Z8y08UeZ8uR08y08y08y08y08y08y08y08y08y08y',
+        role: 'admin',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    ],
+    projects: [
+      {
+        id: 'proj_default',
+        name: 'Default Project',
+        slug: 'default',
+        userId: defaultUserId,
+        createdAt: new Date().toISOString()
+      }
+    ],
     tunnels: [],
-    domains: [],
+    domains: [
+      {
+        id: 'dom_default',
+        domain: 'app.skyranksolution.com',
+        status: 'VERIFIED',
+        userId: defaultUserId,
+        createdAt: new Date().toISOString()
+      }
+    ],
     devices: [],
-    apiKeys: [],
+    apiKeys: [
+      {
+        id: 'key_default',
+        name: 'Default Live Key',
+        key: 'trk_live_43021d2c8ab8a30c79ed6402964cbb3d1ed62d86464df1b9',
+        userId: defaultUserId,
+        createdAt: new Date().toISOString()
+      }
+    ],
     requestLogs: [],
     plans: [],
     subscriptions: []

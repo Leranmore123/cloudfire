@@ -39,7 +39,10 @@ program
 
       const res = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Host': 'app.skyranksolution.com'
+        },
         body: JSON.stringify({ email: email.trim(), password })
       });
 
@@ -116,7 +119,7 @@ program
     }
 
     const port = parseInt(options.port, 10);
-    const edgeWsUrl = options.edgeWsUrl || `ws://${config.edge.host === '0.0.0.0' ? '127.0.0.1' : config.edge.host}:${config.edge.port}${config.edge.wsPath}`;
+    const edgeWsUrl = options.edgeWs || options.edgeWsUrl || process.env.TURNAL_EDGE_WS_URL || `ws://${config.edge.host === '0.0.0.0' ? '127.0.0.1' : config.edge.host}:${config.edge.port}${config.edge.wsPath}`;
 
     console.log(chalk.bold.cyan('\n  ████████╗██╗   ██╗██████╗ ███╗   ██╗ █████╗ ██╗     '));
     console.log(chalk.bold.cyan('  ╚══██╔══╝██║   ██║██╔══██╗████╗  ██║██╔══██╗██║     '));
