@@ -128,7 +128,12 @@ program
     console.log(chalk.bold.cyan('     ██║   ╚██████╔╝██║  ██║██║ ╚████║██║  ██║███████╗'));
     console.log(chalk.bold.cyan('     ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝\n'));
 
-    console.log(chalk.gray(`Starting tunnel for local target: http://${options.host}:${port}...`));
+    let reqSubdomain = options.subdomain;
+    if (!reqSubdomain && options.domain) {
+      if (options.domain.includes('.')) {
+        reqSubdomain = options.domain.split('.')[0];
+      }
+    }
 
     const client = new TunnelClient({
       edgeWsUrl,
@@ -136,7 +141,7 @@ program
       apiKey,
       localPort: port,
       localHost: options.host,
-      subdomain: options.subdomain,
+      subdomain: reqSubdomain,
       customDomain: options.domain,
       projectName: options.name
     });

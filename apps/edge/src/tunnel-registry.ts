@@ -59,7 +59,13 @@ export class TunnelRegistry {
   public async resolveHost(hostHeader: string): Promise<{ session?: TunnelSession; tunnelInfo?: any; isOffline: boolean }> {
     const cleanHost = hostHeader.split(':')[0].toLowerCase().trim();
 
-    // 1. Check Subdomain Match: *.turnal.live or *.localhost
+    // 1. Check direct custom domain match (e.g. app.skyranksolution.com)
+    const customSession = this.getByCustomDomain(cleanHost);
+    if (customSession) {
+      return { session: customSession, isOffline: false };
+    }
+
+    // 2. Check Subdomain Match: *.skyranksolution.com or *.localhost
     let subdomain: string | null = null;
     if (cleanHost.endsWith(`.${config.baseDomain}`)) {
       subdomain = cleanHost.replace(`.${config.baseDomain}`, '');
@@ -72,17 +78,11 @@ export class TunnelRegistry {
       if (liveSession) {
         return { session: liveSession, isOffline: false };
       }
-    } else {
-      // 2. Check Custom Domain Match
-      const liveSession = this.getByCustomDomain(cleanHost);
-      if (liveSession) {
-        return { session: liveSession, isOffline: false };
-      }
     }
 
-    // 3. Fallback: If accessed via Local Network IP (e.g. 192.168.x.x or 127.0.0.1 or localhost)
+    // 3. Fallback: If there are active sessions, route to the active session
     const activeSessions = this.getAllActiveSessions();
-    if (activeSessions.length === 1 && (cleanHost === 'localhost' || cleanHost === '127.0.0.1' || cleanHost.startsWith('192.168.') || cleanHost.startsWith('10.') || cleanHost.startsWith('172.'))) {
+    if (activeSessions.length > 0) {
       return { session: activeSessions[0], isOffline: false };
     }
 
