@@ -21,7 +21,7 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
   const sub = subdomain.trim() || 'app';
   const domain = baseDomain.trim() || 'skyranksolution.com';
   const fullDomain = `${sub}.${domain}`;
-  const liveUrl = `http://${fullDomain}`;
+  const liveUrl = `https://${fullDomain}`;
 
   const generatedCommand = useNpx
     ? `turnal tunnel --port ${port || '5173'} --domain ${fullDomain} --edge-ws ws://13.62.54.247/tunnel/connect --api-key ${apiKey}`
