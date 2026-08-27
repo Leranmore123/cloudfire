@@ -7976,8 +7976,56 @@ var LocalForwarder = class {
       });
     });
     localReq.on("error", (err) => {
+      if (options.hostname === "127.0.0.1") {
+        const fallbackOptions = { ...options, hostname: "localhost" };
+        const fallbackReq = clientModule.request(fallbackOptions, (localRes) => {
+          let bytesSent = 0;
+          sendFrame({
+            type: import_src.MessageType.HTTP_RESPONSE_START,
+            requestId: msg.requestId,
+            statusCode: localRes.statusCode || 200,
+            statusMessage: localRes.statusMessage,
+            headers: localRes.headers,
+            timestamp: Date.now()
+          });
+          localRes.on("data", (chunk) => {
+            bytesSent += chunk.length;
+            sendFrame({
+              type: import_src.MessageType.HTTP_RESPONSE_CHUNK,
+              requestId: msg.requestId,
+              chunk: import_src.FrameCodec.bufferToBase64(chunk),
+              isBinary: true,
+              timestamp: Date.now()
+            });
+          });
+          localRes.on("end", () => {
+            this.activeLocalRequests.delete(msg.requestId);
+            sendFrame({
+              type: import_src.MessageType.HTTP_RESPONSE_END,
+              requestId: msg.requestId,
+              durationMs: Date.now() - startTime,
+              bytesSent,
+              timestamp: Date.now()
+            });
+          });
+        });
+        fallbackReq.on("error", (fbErr) => {
+          this.activeLocalRequests.delete(msg.requestId);
+          console.error(`[LocalForwarder] Error connecting to ${this.localHost}:${this.localPort}:`, fbErr.message);
+          sendFrame({
+            type: import_src.MessageType.ERROR,
+            requestId: msg.requestId,
+            code: "LOCAL_CONNECTION_REFUSED",
+            message: `Failed to connect to local application at http://${this.localHost}:${this.localPort}. Is your local server running?`,
+            timestamp: Date.now()
+          });
+        });
+        this.activeLocalRequests.set(msg.requestId, fallbackReq);
+        fallbackReq.end();
+        return;
+      }
       this.activeLocalRequests.delete(msg.requestId);
-      console.error(`[LocalForwarder] Error connecting to ${this.localHost}:${this.localPort}: ${err.message}`);
+      console.error(`[LocalForwarder] Error connecting to ${this.localHost}:${this.localPort}:`, err.message);
       sendFrame({
         type: import_src.MessageType.ERROR,
         requestId: msg.requestId,
