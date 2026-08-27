@@ -32,9 +32,9 @@ export function Navbar() {
   };
 
   return (
-    <header className="h-16 border-b border-[#1e293b] bg-[#0c1220]/70 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-30">
+    <header className="h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md px-8 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       <div className="flex items-center gap-4">
-        <h1 className="text-lg font-semibold text-white capitalize">
+        <h1 className="text-lg font-bold text-slate-800 capitalize">
           {pathname === '/' ? 'Platform Overview' : pathname.replace('/', '').replace('-', ' ')}
         </h1>
       </div>
@@ -43,16 +43,16 @@ export function Navbar() {
         {user && (
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <div className="text-sm font-medium text-slate-200">{user.name}</div>
-              <div className="text-xs text-slate-400">{user.email}</div>
+              <div className="text-sm font-semibold text-slate-800">{user.name}</div>
+              <div className="text-xs text-slate-500">{user.email}</div>
             </div>
-            <div className="w-9 h-9 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-sky-400">
+            <div className="w-9 h-9 rounded-full bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600">
               <UserIcon className="w-4 h-4" />
             </div>
             <button
               onClick={handleLogout}
               title="Logout"
-              className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+              className="p-2 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>

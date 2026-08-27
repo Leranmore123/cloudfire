@@ -17,19 +17,19 @@ export function StatCard({
   subtitle,
   icon: Icon,
   trend,
-  iconColor = 'text-sky-400',
-  iconBg = 'bg-sky-500/10 border-sky-500/20',
+  iconColor = 'text-sky-600',
+  iconBg = 'bg-sky-50 border-sky-200',
 }: StatCardProps) {
   return (
-    <div className="bg-[#0f172a] border border-[#1e293b] rounded-2xl p-6 relative overflow-hidden group hover:border-slate-700 transition-all duration-300">
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 relative overflow-hidden group hover:border-slate-300 hover:shadow-md transition-all duration-300 shadow-sm">
       <div className="flex items-start justify-between">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
             {title}
           </span>
-          <div className="text-3xl font-bold text-white mt-2 tracking-tight">{value}</div>
-          {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
-          {trend && <span className="text-xs text-emerald-400 font-medium mt-2 inline-block">{trend}</span>}
+          <div className="text-3xl font-extrabold text-slate-900 mt-2 tracking-tight">{value}</div>
+          {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
+          {trend && <span className="text-xs text-emerald-600 font-semibold mt-2 inline-block">{trend}</span>}
         </div>
         <div className={`p-3.5 rounded-xl border ${iconBg} ${iconColor}`}>
           <Icon className="w-5 h-5" />
