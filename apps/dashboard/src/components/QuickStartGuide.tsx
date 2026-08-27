@@ -25,7 +25,7 @@ export function QuickStartGuide({ apiKey = 'trk_live_43021d2c8ab8a30c79ed6402964
 
   const generatedCommand = useNpx
     ? `turnal tunnel --port ${port || '5173'} --domain ${fullDomain} --edge-ws wss://app.skyranksolution.com/tunnel/connect --api-key ${apiKey}`
-    : `node apps/tunnel-agent/ts/dist/cli.mjs tunnel --port ${port || '5173'} --domain ${fullDomain} --edge-ws wss://app.skyranksolution.com/tunnel/connect --api-key ${apiKey}`;
+    : `node cli.mjs tunnel --port ${port || '5173'} --domain ${fullDomain} --edge-ws wss://app.skyranksolution.com/tunnel/connect --api-key ${apiKey}`;
 
   const handleCopyCmd = async () => {
     const success = await copyToClipboard(generatedCommand);
